@@ -13,20 +13,22 @@ get_current_ip() {
 get_gandi_ip() {
     domain=$1
     reccord=$2
-    api_key=$3
+    api_auth_scheme=$3
+    api_key=$4
     
     bashio::log.debug "[Gandi] - Get data for - ${domain} - ${reccord}"
-    echo "$(curl -s -H "Authorization: Apikey ${api_key}" https://api.gandi.net/v5/livedns/domains/${domain}/records/${reccord} | jq -r '.[].rrset_values[0]')"
+    echo "$(curl -s -H "Authorization: ${api_auth_scheme} ${api_key}" https://api.gandi.net/v5/livedns/domains/${domain}/records/${reccord} | jq -r '.[].rrset_values[0]')"
 }
 
 update_gandi_ip() {
     domain=$1
     reccord=$2
-    api_key=$3
-    ip=$4
+    api_auth_scheme=$3
+    api_key=$4
+    ip=$5
     payload='{"items": [{"rrset_type": "A","rrset_values": ["'"${ip}"'"],"rrset_ttl": 300}]}'
     bashio::log.debug "[Gandi] - Update reccord - ${domain} - ${reccord}"
-    echo "$(curl -s -g -X PUT -H "Content-Type: application/json" -d "${payload}" -H "Authorization: Apikey ${api_key}" https://api.gandi.net/v5/livedns/domains/${domain}/records/${reccord})"
+    echo "$(curl -s -g -X PUT -H "Content-Type: application/json" -d "${payload}" -H "Authorization: ${api_auth_scheme} ${api_key}" https://api.gandi.net/v5/livedns/domains/${domain}/records/${reccord})"
 
 }
 # ==============================================================================
@@ -35,6 +37,7 @@ update_gandi_ip() {
 main() {
     local domain
     local reccords
+    local api_auth_scheme
     local api_key
     local current_ip
     local gandi_ip
@@ -42,6 +45,7 @@ main() {
 
     domain=$(bashio::config 'domain')
     reccords=$(bashio::config 'reccords')
+    api_auth_scheme=$(bashio::config 'api_auth_scheme')
     api_key=$(bashio::config 'api_key')
 
     bashio::log.trace "${FUNCNAME[0]}"
@@ -50,7 +54,7 @@ main() {
         current_ip=$(get_current_ip)
         bashio::log.debug "Current ip is ${current_ip}"
 
-        gandi_ip=$(get_gandi_ip "${domain}" "${reccords[0]}" "${api_key}")
+        gandi_ip=$(get_gandi_ip "${domain}" "${reccords[0]}" "${api_auth_scheme}" "${api_key}")
         bashio::log.debug "Gandi ip is ${gandi_ip}"
 
         if [ "${current_ip}" = "${gandi_ip}" ]; then
@@ -61,7 +65,7 @@ main() {
             for reccord in ${reccords}
             do
                 bashio::log.debug "Updating reccord ${reccord}"
-                res=$(update_gandi_ip "${domain}" "${reccord}" "${api_key}" "${current_ip}")
+                res=$(update_gandi_ip "${domain}" "${reccord}" "${api_auth_scheme}" "${api_key}" "${current_ip}")
                 bashio::log.debug "Reccord ${res}"
                 bashio::log.info "[GandiDns] - Domain ${reccord}.${domain} updated with IP ${current_ip}"
             done

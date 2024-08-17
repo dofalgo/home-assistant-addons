@@ -1,4 +1,4 @@
-# Home Assistant Add-on: GandiDns
+# Home Assistant Add-on: GandiDnsNg
 
 This add-on helps you to keep your public IP and your domain name dns zone synchronized.
 In order to use this add-on, you need a domain name registered at Gandi.net and your API key from Gandi.

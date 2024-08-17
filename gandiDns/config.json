@@ -1,18 +1,20 @@
 {
-  "name": "GandiDNS",
-  "version": "0.0.2",
-  "slug": "gandi-dns",
+  "name": "GandiDNSng",
+  "version": "0.0.3",
+  "slug": "gandi-dns-ng",
   "description": "Update Gandi dns zone",
-  "url": "https://github.com/benlbrm/home-assistant-addons/",
+  "url": "https://github.com/dofalgo/home-assistant-addons/",
   "startup": "application",
   "arch": ["aarch64", "amd64", "armhf", "armv7", "i386"],
   "boot": "auto",
   "options": {
+    "api_auth_scheme": "",
     "api_key": "",
     "domain": "",
     "reccords": []
   },
   "schema": {
+    "api_auth_scheme": "str",
     "api_key": "str",
     "domain": "str",
     "reccords": ["str"]

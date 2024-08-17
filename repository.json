@@ -1,5 +1,5 @@
 {
-    "name": "Benlbrrm Home Assistant add-ons store",
-    "url": "https://github.com/benlbrm/home-assistant-addons",
-    "maintainer": "@benlbrm"
+    "name": "Dof's Home Assistant add-ons store, forked from https://github.com/benlbrm/home-assistant-addons",
+    "url": "https://github.com/dofalgo/home-assistant-addons",
+    "maintainer": "@dofalgo"
   }
